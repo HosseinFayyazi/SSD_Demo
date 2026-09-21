@@ -3,432 +3,517 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Interpretable Synthetic Speech Detection | Live Demo</title>
+  <title>Interpretable Synthetic Speech Detection | Demo</title>
   
-  <!-- Tailwind CSS CDN -->
+  <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- WaveSurfer.js & Regions Plugin -->
-  <script src="https://unpkg.com/wavesurfer.js@7"></script>
+  
+  <!-- WaveSurfer.js + Regions Plugin -->
+  <script src="https://unpkg.com/wavesurfer.js@7/dist/wavesurfer.min.js"></script>
   <script src="https://unpkg.com/wavesurfer.js@7/dist/plugins/regions.min.js"></script>
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
   <style>
-    /* Custom scrollbar styling for light theme */
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #f1f5f9;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #94a3b8;
+    /* Smooth transition for regions */
+    .wavesurfer-region {
+      transition: background-color 0.2s ease;
     }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
+<body class="bg-slate-50 text-slate-900 min-h-screen font-sans antialiased">
 
-  <!-- Top Header / Nav -->
-  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
-      <div>
-        <div class="flex items-center space-x-2">
-          <span class="inline-block w-2.5 h-2.5 rounded-full bg-indigo-600"></span>
-          <h1 class="text-lg font-bold text-slate-900 tracking-tight">Interpretable Synthetic Speech Detection</h1>
-          <span class="text-xs bg-indigo-50 text-indigo-700 font-medium px-2 py-0.5 rounded border border-indigo-200">Interactive Demo</span>
+  <!-- TOP NAVIGATION BAR -->
+  <header class="border-b border-slate-200 bg-slate-100/60 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <span class="p-2 bg-indigo-600/20 text-indigo-400 rounded-lg border border-indigo-500/30">
+          <i class="fa-solid fa-wave-square text-lg"></i>
+        </span>
+        <div>
+          <h1 class="text-base font-bold tracking-wide leading-tight">Intelligent Sound processing Laboratory (ISP-Lab)</h1>
+          <p class="text-xs text-slate-600">Interpretable Speech Forensics</p>
         </div>
-        <p class="text-xs text-slate-500 mt-0.5">Phonetic segment attribution via Integrated Gradients (PPGs, LARs & Spectral Features)</p>
       </div>
-      <div class="flex items-center gap-3">
-        <a href="https://github.com" target="_blank" class="text-xs text-slate-600 hover:text-indigo-600 font-medium bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-md border border-slate-200 transition">
-          View Model Code
+      
+      <div class="flex items-center space-x-3">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Static Pre-computed Demo
+        </span>
+        <a href="https://github.com" target="_blank" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-800 border border-slate-300 px-3 py-1.5 rounded-md flex items-center gap-2 transition">
+          <i class="fa-brands fa-github text-sm"></i> Code / Paper
         </a>
       </div>
     </div>
   </header>
 
-  <!-- Main Content -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex-grow grid grid-cols-1 lg:grid-cols-12 gap-6">
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
 
-    <!-- Left Column: Controls & Sample Selector (4 cols) -->
-    <div class="lg:col-span-4 space-y-5">
+    <!-- HERO & CONTROLS SECTION -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       
       <!-- Sample Selector Card -->
-      <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
-        <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">1. Select Evaluation Sample</h2>
-        <div class="space-y-2" id="sampleSelectorContainer">
+      <div class="lg:col-span-2 bg-slate-100/90 border border-slate-200 rounded-xl p-6 shadow-xl space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm font-semibold uppercase tracking-wider text-indigo-400 flex items-center gap-2">
+            <i class="fa-solid fa-list-check"></i> Select Curated Evaluation Sample
+          </h2>
+          <span class="text-xs text-slate-600" id="groundTruthBadge">Ground Truth: Bonafide</span>
+        </div>
+
+        <!-- Sample Buttons Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="sampleSelectorContainer">
           <!-- Populated by JavaScript -->
         </div>
-      </div>
 
-      <!-- Active Model Selection -->
-      <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
-        <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">2. Feature Pipeline / Model</h2>
-        <div class="grid grid-cols-2 gap-2" id="modelSelectorContainer">
-          <button onclick="selectModel('fusion')" id="btn-fusion" class="model-btn text-xs font-medium py-2 px-3 rounded-lg border border-indigo-600 bg-indigo-50/70 text-indigo-700 shadow-xs text-left">
-            <span class="block font-bold">Fusion Tree</span>
-            <span class="text-[10px] text-slate-500">SFD + AASIST + CSN</span>
-          </button>
-          <button onclick="selectModel('ppg')" id="btn-ppg" class="model-btn text-xs font-medium py-2 px-3 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-600 text-left">
-            <span class="block font-bold">PAFL (PPG)</span>
-            <span class="text-[10px] text-slate-500">Phonetic loss module</span>
-          </button>
-          <button onclick="selectModel('rainbow')" id="btn-rainbow" class="model-btn text-xs font-medium py-2 px-3 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-600 text-left">
-            <span class="block font-bold">Rainbowgram</span>
-            <span class="text-[10px] text-slate-500">Magnitude + Inst. Phase</span>
-          </button>
-          <button onclick="selectModel('lar')" id="btn-lar" class="model-btn text-xs font-medium py-2 px-3 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-600 text-left">
-            <span class="block font-bold">Acoustic LARs</span>
-            <span class="text-[10px] text-slate-500">Log Area Ratio poles</span>
-          </button>
+        <!-- Utterance Metadata -->
+        <div class="p-3 bg-slate-50/60 rounded-lg border border-slate-200/80 text-xs text-slate-600 flex flex-wrap items-center justify-between gap-2">
+          <span><strong>Text:</strong> <em id="transcriptText">"..."</em></span>
+          <span id="sampleMetaDuration">Duration: 0.0s</span>
         </div>
       </div>
 
-      <!-- Calibrated Verdict Card -->
-      <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-        <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">3. Classification Verdict</h2>
-        <div class="flex items-center justify-between mt-2">
+      <!-- Verdict Card -->
+      <div class="bg-slate-100/90 border border-slate-200 rounded-xl p-6 shadow-xl flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs uppercase font-semibold tracking-wider text-slate-600">Forensic Verdict</span>
+            <span class="text-xs text-indigo-400 cursor-pointer hover:underline" id="infoTip" title="Confidence is computed using sigmoid-calibrated logit scores.">
+              <i class="fa-solid fa-circle-info"></i> Calibrated
+            </span>
+          </div>
+          
+          <div class="text-center py-4">
+            <div id="verdictBadge" class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-base font-bold bg-rose-500/10 text-rose-400 border border-rose-500/30">
+              <i class="fa-solid fa-triangle-exclamation"></i> SYNTHETIC DETECTED
+            </div>
+            <div class="mt-3 text-3xl font-extrabold text-white" id="verdictConfidence">98.4%</div>
+            <div class="text-xs text-slate-600 mt-1">Synthetic Probability Score</div>
+          </div>
+        </div>
+
+        <!-- Model Pipeline Selector -->
+        <div class="pt-4 border-t border-slate-200">
+          <label class="block text-xs font-semibold text-slate-600 mb-2 uppercase tracking-wider">Active Model Backbone</label>
+          <div class="grid grid-cols-2 gap-2" id="modelSelector">
+            <button data-model="fusion" class="model-btn active px-2.5 py-1.5 rounded text-xs font-medium bg-indigo-600 text-white border border-indigo-500 transition">Fusion Tree</button>
+            <button data-model="rainbowgram" class="model-btn px-2.5 py-1.5 rounded text-xs font-medium bg-slate-200 hover:bg-slate-300 text-slate-700 border border-slate-300 transition">Rainbowgram</button>
+            <button data-model="ppg" class="model-btn px-2.5 py-1.5 rounded text-xs font-medium bg-slate-200 hover:bg-slate-300 text-slate-700 border border-slate-300 transition">PPG Model</button>
+            <button data-model="lar" class="model-btn px-2.5 py-1.5 rounded text-xs font-medium bg-slate-200 hover:bg-slate-300 text-slate-700 border border-slate-300 transition">LAR Features</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WAVEFORM & AUDIO PLAYBACK -->
+    <div class="bg-slate-100/90 border border-slate-200 rounded-xl p-6 shadow-xl space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <button id="playPauseBtn" class="w-10 h-10 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center transition shadow-md shadow-indigo-600/30">
+            <i class="fa-solid fa-play text-sm"></i>
+          </button>
           <div>
-            <div id="verdictBadge" class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-700 border border-rose-200">
-              SYNTHETIC (DEEPFAKE)
-            </div>
-            <div class="text-[11px] text-slate-500 mt-1.5" id="groundTruthNote">Ground Truth: <span class="font-medium text-slate-700">Spoof (Vocoder Artifacts)</span></div>
-          </div>
-          <div class="text-right">
-            <span class="text-3xl font-extrabold text-slate-900" id="confidenceScore">98.4%</span>
-            <div class="text-[10px] text-slate-400 font-medium tracking-tight">Spoof Probability</div>
+            <div class="text-sm font-semibold text-white">Audio Waveform & Segment Alignment</div>
+            <div class="text-xs text-slate-600">Click on any highlighted phonetic segment to listen to that exact span</div>
           </div>
         </div>
 
-        <!-- Metric Bar -->
-        <div class="mt-4">
-          <div class="flex justify-between text-[11px] text-slate-500 mb-1">
-            <span>Genuine</span>
-            <span>Synthetic</span>
-          </div>
-          <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden border border-slate-200">
-            <div id="scoreBar" class="bg-rose-500 h-2 rounded-full transition-all duration-500" style="width: 98.4%"></div>
-          </div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-slate-600 font-mono" id="timeDisplay">0:00 / 0:00</span>
+          <button id="toggleFeatureImgBtn" class="text-xs bg-slate-200 hover:bg-slate-300 border border-slate-300 px-3 py-1.5 rounded text-slate-700 flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-image"></i> Toggle Feature Spec
+          </button>
         </div>
       </div>
 
-    </div>
-
-    <!-- Right Column: Waveform, Phoneme Attribution & Spectrogram (8 cols) -->
-    <div class bg-rose-100 text-rose-700 border border-rose-200">
-              SYNTHETIC (DEEPFAKE)
-            </div>
-            <div class="text-[11px] text-slate-500 mt-1.5" id="groundTruthNote">Ground Truth: <span class="font-medium text-slate-700">Spoof (Vocoder Artifacts)</span></div>
-          </div>
-          <div class="text-right">
-            <span class="text-3xl font-extrabold text-slate-900" id="confidenceScore">98.4%</span>
-            <div class="text-[10px] text-slate-400 font-medium tracking-tight">Spoof Probability</div>
-          </div>
-        </div>
-
-        <!-- Metric Bar -->
-        <div class="mt-4">
-          <div class="flex justify-between text-[11px] text-slate-500 mb-1">
-            <span>Genuine</span>
-            <span>Synthetic</span>
-          </div>
-          <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden border border-slate-200">
-            <div id="scoreBar" class="bg-rose-500 h-2 rounded-full transition-all duration-500" style="width: 98.4%"></div>
-          </div>
-        </div>
+      <!-- Waveform Canvas -->
+      <div class="relative bg-slate-50 rounded-lg p-2 border border-slate-200/80">
+        <div id="waveform" class="w-full"></div>
       </div>
 
+      <!-- Feature Spectrogram / Rainbowgram Image View (Optional expandable preview) -->
+      <div id="spectrogramContainer" class="hidden bg-slate-50 p-3 rounded-lg border border-slate-200/80 space-y-2">
+        <div class="flex justify-between items-center text-xs text-slate-600">
+          <span>Aligned 2-Channel Rainbowgram (Magnitude + Instantaneous Frequency)</span>
+          <span class="text-indigo-400 font-mono">Time-synchronized representation</span>
+        </div>
+        <div class="w-full h-28 bg-gradient-to-r from-violet-900/40 via-fuchsia-900/40 to-cyan-900/40 rounded border border-slate-200 flex items-center justify-center text-slate-500 text-xs italic">
+          [ Feature Heatmap / Rainbowgram Preview ]
+        </div>
+      </div>
     </div>
 
-    <!-- Right Column: Waveform, Phoneme Attribution & Spectrogram (8 cols) -->
-    <div class="lg:col-span-8 space-y-5">
+    <!-- EXPLANATION DASHBOARD (INTEGRATED GRADIENTS) -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       
-      <!-- Waveform & Audio Player -->
-      <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-        <div class="flex items-center justify-between mb-3">
-          <div class="flex items-center gap-2">
-            <button id="playBtn" onclick="togglePlay()" class="inline-flex items-center justify-centersvg>
-            </button>
-            <div>
-              <div class="text-sm font-semibold text-slate-900" id="currentSampleName">sample_synthetic_01.wav</div>
-              <div class="text-xs text-slate-400" id="timeDisplay">00:00 / 00:00</div>
-            </div>
+      <!-- Attribution Table & Bar Graph -->
+      <div class="lg:col-span-2 bg-slate-100/90 border border-slate-200 rounded-xl p-6 shadow-xl space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-sm font-semibold uppercase tracking-wider text-indigo-400 flex items-center gap-2">
+              <i class="fa-solid fa-chart-simple"></i> Phonemic Integrated Gradients (IG) Attribution
+            </h3>
+            <p class="text-xs text-slate-600 mt-0.5">Identifies which phonemes in which segments triggered the prediction</p>
           </div>
-          <span class="text-[11px] bg-slate-100 text-slate-600 px-2.5 py-1 rounded-md border border-slate-200 font-mono">16 kHz / Mono</span>
+          <span class="text-xs px-2.5 py-1 rounded bg-slate-200 text-slate-600 border border-slate-300">Sorted by Impact</span>
         </div>
 
-        <!-- WaveSurfer DOM Target -->
-        <div class="relative bg-slate-50 border border-slate-200 rounded-lg p-3 my-2">
-          <div id="waveform" class="w-full"></div>
-        </div>
-
-        <!-- Attribution Legend -->
-        <div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between text-xs text-slate-500 gap-2">
-          <span class="font-medium text-slate-600">Phonetic IG Attribution:</span>
-          <div class="flex items-center gap-4">
-            <span class="inline-flex items-center gap-1.5"><span class="w-3 h-3 rounded-xs bg-rose-500 inline-block"></span> High synthetic cue</span>
-            <span class="inline-flex items-center gap-1.5"><span class="w-3 h-3 rounded-xs bg-amber-400 inline-block"></span> Moderate anomaly</span>
-            <span class="inline-flex items-center gap-1.5"><span class="w-3 h-3 rounded-xs bg-emerald-500 inline-block"></span> Natural speech cue</span>
-          </div>
+        <div class="space-y-3" id="phonemeBarsContainer">
+          <!-- Rendered via JavaScript -->
         </div>
       </div>
 
-      <!-- Phoneme Attribution Breakdown Timeline -->
-      <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-        <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">Phoneme Segmentation & Importance (Integrated Gradients)</h3>
-        <p class="text-xs text-slate-500 mb-4">Click any segment to jump playback directly to that phonetic duration.</p>
-        
-        <div class="flex flex-wrap gap-2" id="phonemeChipsContainer">
-          <!-- Phoneme chips rendered here -->
-        </div>
-      </div>
-
-      <!-- Feature Map / Visual Analysis (Spectrogram / Rainbowgram preview) -->
-      <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-        <div class="flex items-center justify-between mb-3">
-          <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400">Representation Preview</h3>
-          <span class="text-xs text-slate-400" id="featureLabel">Instantaneous Frequency (Rainbowgram)</span>
-        </div>
-        <div class="h-32 bg-slate-100 rounded-lg border border-slate-200 flex items-center justify-center overflow-hidden relative" id="featureCanvasMock">
-          <!-- Placeholder SVG / visual representation -->
-          <div class="absolute inset-0 bg-gradient-to-r from-blue-100 via-indigo-50 to-rose-100 opacity-80"></div>
-          <div class="relative z-10 text-center text-slate-500 text-xs">
-            <span class="font-mono text-slate-700 font-semibold block text-sm mb-0.5">2-Channel IF + Log Magnitude Spectrogram</span>
-            Click timeline above to inspect time-frequency alignment
+      <!-- Forensic Diagnostics Note -->
+      <div class="bg-slate-100/90 border border-slate-200 rounded-xl p-6 shadow-xl flex flex-col justify-between space-y-4">
+        <div>
+          <h3 class="text-sm font-semibold uppercase tracking-wider text-indigo-400 flex items-center gap-2 mb-3">
+            <i class="fa-solid fa-microscope"></i> Acoustic Interpretation
+          </h3>
+          <div id="featureInsightCard" class="bg-slate-50/70 p-4 rounded-lg border border-slate-200 space-y-3 text-xs leading-relaxed text-slate-700">
+            <!-- Dynamic explanation text -->
           </div>
         </div>
-      </div>
 
+        <div class="p-3 bg-indigo-950/30 border border-indigo-800/40 rounded-lg text-xs text-indigo-300 space-y-1">
+          <div class="font-semibold flex items-center gap-1.5">
+            <i class="fa-solid fa-shield-halved"></i> Why this matters:
+          </div>
+          <p class="text-slate-600">
+            Black-box detectors can fail under domain shift. Grounding attribution to phonetic segments guarantees verifiable forensic evidence.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- BENCHMARKS & MODEL ARCHITECTURE MODAL/SECTION -->
+    <div class="bg-slate-100/60 border border-slate-200/80 rounded-xl p-6">
+      <h3 class="text-sm font-semibold uppercase tracking-wider text-slate-700 mb-3">Model Architecture Summary</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 text-xs">
+        <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+          <div class="text-slate-500 uppercase font-bold text-[10px]">Backbone 1</div>
+          <div class="text-slate-800 font-semibold mt-1">LARs + CSN</div>
+          <div class="text-slate-600 mt-1">Log Area Ratios for vocal tract boundary modeling.</div>
+        </div>
+        <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+          <div class="text-slate-500 uppercase font-bold text-[10px]">Backbone 2</div>
+          <div class="text-slate-800 font-semibold mt-1">PPGs (Wav2Vec 2.0)</div>
+          <div class="text-slate-600 mt-1">Phonetic posteriorgrams for pronunciation hardness.</div>
+        </div>
+        <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+          <div class="text-slate-500 uppercase font-bold text-[10px]">Backbone 3</div>
+          <div class="text-slate-800 font-semibold mt-1">Rainbowgrams</div>
+          <div class="text-slate-600 mt-1">Joint magnitude and instantaneous frequency tracking.</div>
+        </div>
+        <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+          <div class="text-slate-500 uppercase font-bold text-[10px]">Final Classifier</div>
+          <div class="text-slate-800 font-semibold mt-1">Hierarchical Fusion Tree</div>
+          <div class="text-slate-600 mt-1">Uncertainty-weighted score combination across representations.</div>
+        </div>
+      </div>
     </div>
 
   </main>
 
-  <footer class="bg-white border-t border-slate-200 py-4 mt-auto">
-    <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-400">
-      Built for academic evaluation and research demonstration • Source-Filter Decomposition & Phoneme-Aware Metric Learning
-    </div>
-  </footer>
-
-  <!-- Script: Precomputed Mock Data & Interactivity -->
+  <!-- JAVASCRIPT DATA & LOGIC -->
   <script>
+    // PRE-COMPUTED DATASET (Replace with your actual pre-computed outputs)
     const PRECOMPUTED_SAMPLES = [
       {
-        id: "sample-1",
-        name: "LJ001-0004_vits_spoof.wav",
-        label: "Spoof (VITS Neural Vocoder)",
-        audioUrl: "https://actions.google.com/sounds/v1/speech/person_speaking.ogg", // Public fallback sample
-        score: 0.984,
-        isSpoof: true,
+        id: "sample_01",
+        name: "ElevenLabs TTS",
+        tag: "Neural TTS Attack",
+        groundTruth: "Synthetic",
+        transcript: "The speech signal exhibits unnatural high-frequency phase coherence.",
+        // A royalty-free short speech sample hosted on CDN for instant testing
+        audioUrl: "https://actions.google.com/sounds/v1/speech/greeting_male.ogg",
+        duration: "2.8s",
+        models: {
+          fusion: { prediction: "Synthetic", score: 0.984 },
+          rainbowgram: { prediction: "Synthetic", score: 0.952 },
+          ppg: { prediction: "Synthetic", score: 0.891 },
+          lar: { prediction: "Synthetic", score: 0.810 }
+        },
         phonemes: [
-          { symbol: "/dh/", start: 0.05, end: 0.18, score: 0.15, text: "the" },
-          { symbol: "/iy/", start: 0.18, end: 0.42, score: 0.88, text: "e" },
-          { symbol: "/s/",  start: 0.42, end: 0.70, score: 0.95, text: "s" },
-          { symbol: "/p/",  start: 0.70, end: 0.95, score: 0.45, text: "p" },
-          { symbol: "/iy/", start: 0.95, end: 1.30, score: 0.92, text: "ee" },
-          { symbol: "/ch/", start: 1.30, end: 1.65, score: 0.78, text: "ch" }
-        ]
+          { phoneme: "/s/", start: 0.25, end: 0.45, ig_score: 0.48, category: "Fricative", note: "Anomalous high-frequency phase coherence detected in Rainbowgram IF channel." },
+          { phoneme: "/tʃ/", start: 0.55, end: 0.72, ig_score: 0.31, category: "Affricate", note: "Overly sharp energy transition contrary to biological vocal tract damping." },
+          { phoneme: "/iː/", start: 1.10, end: 1.35, ig_score: 0.14, category: "Vowel", note: "Slight unnatural static formant stability across frame boundaries." },
+          { phoneme: "/n/", start: 1.65, end: 1.82, ig_score: 0.05, category: "Nasal", note: "Typical nasal resonance, low contribution." }
+        ],
+        acousticInsight: "The <strong>Fusion Tree</strong> prioritizes Rainbowgram IF channel evidence along with LAR deviations. Notice how the unvoiced fricative <code>/s/</code> accounts for nearly 50% of the synthetic attribution score due to spectral over-smoothing."
       },
       {
-        id: "sample-2",
-        name: "LJ002-0012_natural_bonafide.wav",
-        label: "Bona-fide (Human Speaker)",
-        audioUrl: "https://actions.google.com/sounds/v1/speech/person_speaking.ogg",
-        score: 0.042,
-        isSpoof: false,
+        id: "sample_02",
+        name: "Bonafide Natural",
+        tag: "Human Speaker",
+        groundTruth: "Bonafide",
+        transcript: "Natural voice captured with realistic room acoustics and vocal micro-tremors.",
+        audioUrl: "https://actions.google.com/sounds/v1/ambiences/coffee_shop.ogg",
+        duration: "3.2s",
+        models: {
+          fusion: { prediction: "Bonafide", score: 0.035 },
+          rainbowgram: { prediction: "Bonafide", score: 0.042 },
+          ppg: { prediction: "Bonafide", score: 0.028 },
+          lar: { prediction: "Bonafide", score: 0.051 }
+        },
         phonemes: [
-          { symbol: "/hh/", start: 0.05, end: 0.20, score: 0.02, text: "h" },
-          { symbol: "/eh/", start: 0.20, end: 0.50, score: 0.05, text: "e" },
-          { symbol: "/l/",  start: 0.50, end: 0.80, score: 0.03, text: "l" },
-          { symbol: "/ow/", start: 0.80, end: 1.25, score: 0.08, text: "o" }
-        ]
+          { phoneme: "/æ/", start: 0.30, end: 0.55, ig_score: -0.35, category: "Vowel", note: "Natural vocal fold jitter and shimmer patterns observed in LAR proxy." },
+          { phoneme: "/k/", start: 0.75, end: 0.88, ig_score: -0.25, category: "Plosive", note: "Realistic turbulent aspiration burst matching organic vocal tract area." },
+          { phoneme: "/m/", start: 1.20, end: 1.45, ig_score: -0.15, category: "Nasal", note: "Organic low-frequency pole-zero distribution." }
+        ],
+        acousticInsight: "All feature extractors agree strongly with <strong>Bonafide</strong> status. Vocal micro-tremors and natural glottal pulse variations across the open vowels prevent false positive triggers."
+      },
+      {
+        id: "sample_03",
+        name: "Voice Conversion",
+        tag: "Diffusion VC",
+        groundTruth: "Synthetic",
+        transcript: "Target timbre was altered while retaining source speaker prosody.",
+        audioUrl: "https://actions.google.com/sounds/v1/speech/sample_sentence.ogg",
+        duration: "2.5s",
+        models: {
+          fusion: { prediction: "Synthetic", score: 0.912 },
+          rainbowgram: { prediction: "Synthetic", score: 0.785 },
+          ppg: { prediction: "Synthetic", score: 0.941 },
+          lar: { prediction: "Synthetic", score: 0.880 }
+        },
+        phonemes: [
+          { phoneme: "/v/", start: 0.15, end: 0.38, ig_score: 0.42, category: "Fricative", note: "PPG alignment reveals temporal mismatch between source phone duration and formant transitions." },
+          { phoneme: "/ɔɪ/", start: 0.60, end: 0.92, ig_score: 0.36, category: "Diphthong", note: "Vocal tract cross-section (LARs) exhibits discontinuous interpolation." },
+          { phoneme: "/s/", start: 1.10, end: 1.30, ig_score: 0.18, category: "Fricative", note: "Phase inconsistencies in vocoder reconstruction." }
+        ],
+        acousticInsight: "In Voice Conversion attacks, <strong>PPG representation</strong> provides the strongest discriminative power because frame-level phonetic alignments deviate from physical articulation constraints during diphthong transitions."
       }
     ];
 
+    // APPLICATION STATE
     let currentSampleIndex = 0;
+    let currentModel = 'fusion';
     let wavesurfer = null;
     let wsRegions = null;
 
+    // INITIALIZE WAVESURFER
     function initWaveSurfer() {
-      // Light-theme styled wavesurfer
+      // Create Regions Plugin
+      wsRegions = WaveSurfer.Regions.create();
+
+      // Create Wavesurfer Instance
       wavesurfer = WaveSurfer.create({
         container: '#waveform',
-        waveColor: '#cbd5e1',         // Soft slate-300
-        progressColor: '#4f46e5',     // Indigo-600
-        cursorColor: '#0f172a',       // Slate-900
+        waveColor: '#cbd5e1',
+        progressColor: '#6366f1',
+        cursorColor: '#818cf8',
         barWidth: 2,
+        barGap: 3,
         barRadius: 2,
-        cursorWidth: 1.5,
         height: 80,
-        responsive: true,
-        normalize: true
+        plugins: [wsRegions]
       });
 
-      wsRegions = wavesurfer.registerPlugin(WaveSurfer.Regions.create());
-
+      // Events
       wavesurfer.on('timeupdate', (currentTime) => {
         const total = wavesurfer.getDuration() || 0;
-        document.getElementById('timeDisplay').innerText = 
-          `${formatTime(currentTime)} / ${formatTime(total)}`;
+        document.getElementById('timeDisplay').innerText = `${formatTime(currentTime)} / ${formatTime(total)}`;
       });
 
       wavesurfer.on('finish', () => {
-        document.getElementById('playIcon').classList.remove('hidden');
-        document.getElementById('pauseIcon').classList.add('hidden');
+        const btn = document.getElementById('playPauseBtn');
+        btn.innerHTML = '<i class="fa-solid fa-play text-sm"></i>';
+      });
+
+      // Region click to play segment
+      wsRegions.on('region-clicked', (region, e) => {
+        e.stopPropagation();
+        region.play();
       });
     }
 
     function formatTime(seconds) {
       const min = Math.floor(seconds / 60);
       const sec = Math.floor(seconds % 60);
-      return `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+      return `${min}:${sec < 10 ? '0' : ''}${sec}`;
     }
 
-    function togglePlay() {
-      if (!wavesurfer) return;
-      wavesurfer.playPause();
-      const isPlaying = wavesurfer.isPlaying();
-      document.getElementById('playIcon').classList.toggle('hidden', isPlaying);
-      document.getElementById('pauseIcon').classList.toggle('hidden', !isPlaying);
-    }
-
-    function loadSample(index) {
-      currentSampleIndex = index;
-      const s = PRECOMPUTED_SAMPLES[index];
-
-      // Update Sample List UI
-      renderSampleList();
-
-      // Update Verdict
-      const isSpoof = s.isSpoof;
-      const badge = document.getElementById('verdictBadge');
-      const scoreBar = document.getElementById('scoreBar');
-      const confScore = document.getElementById('confidenceScore');
-      const sampleName = document.getElementById('currentSampleName');
-      
-      sampleName.innerText = s.name;
-      confScore.innerText = `${(s.score * 100).toFixed(1)}%`;
-      scoreBar.style.width = `${(s.score * 100)}%`;
-
-      if (isSpoof) {
-        badge.innerText = "SYNTHETIC (SPOOF)";
-        badge.className = "inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-700 border border-rose-200";
-        scoreBar.className = "bg-rose-500 h-2 rounded-full transition-all duration-500";
-      } else {
-        badge.innerText = "BONA-FIDE (GENUINE)";
-        badge.className = "inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700 border border-emerald-200";
-        scoreBar.className = "bg-emerald-500 h-2 rounded-full transition-all duration-500";
-      }
-
-      // Load Audio into Wavesurfer
-      wavesurfer.load(s.audioUrl);
-
-      // Render Phoneme chips & waveform regions
-      wavesurfer.once('ready', () => {
-        wsRegions.clearRegions();
-        renderPhonemes(s.phonemes);
-      });
-    }
-
-    function renderPhonemes(phonemes) {
-      const container = document.getElementById('phonemeChipsContainer');
-      container.innerHTML = '';
-
-      phonemes.forEach((p) => {
-        // Compute light color intensity based on score
-        let colorClass = "bg-slate-100 text-slate-700 border-slate-200";
-        let regionColor = "rgba(100, 116, 139, 0.15)";
-
-        if (p.score > 0.7) {
-          colorClass = "bg-rose-50 text-rose-700 border-rose-200";
-          regionColor = "rgba(244, 63, 94, 0.18)";
-        } else if (p.score > 0.35) {
-          colorClass = "bg-amber-50 text-amber-700 border-amber-200";
-          regionColor = "rgba(245, 158, 11, 0.18)";
-        } else {
-          colorClass = "bg-emerald-50 text-emerald-700 border-emerald-200";
-          regionColor = "rgba(16, 185, 129, 0.18)";
-        }
-
-        // Add region to waveform
-        wsRegions.addRegion({
-          start: p.start,
-          end: p.end,
-          color: regionColor,
-          drag: false,
-          resize: false
-        });
-
-        // Add interactive chip
-        const chip = document.createElement('button');
-        chip.className = `flex flex-col items-center px-3 py-1.5 rounded-lg border text-xs transition hover:scale-105 active:scale-95 ${colorClass}`;
-        chip.innerHTML = `
-          <span class="font-mono font-bold">${p.symbol}</span>
-          <span class="text-[10px] opacity-75">IG: ${p.score.toFixed(2)}</span>
-        `;
-        chip.onclick = () => {
-          wavesurfer.setTime(p.start);
-          wavesurfer.play();
-          document.getElementById('playIcon').classList.add('hidden');
-          document.getElementById('pauseIcon').classList.remove('hidden');
-        };
-
-        container.appendChild(chip);
-      });
-    }
-
-    function renderSampleList() {
+    // RENDER SAMPLES BUTTONS
+    function renderSampleSelector() {
       const container = document.getElementById('sampleSelectorContainer');
       container.innerHTML = '';
 
-      PRECOMPUTED_SAMPLES.forEach((sample, i) => {
-        const isSelected = i === currentSampleIndex;
+      PRECOMPUTED_SAMPLES.forEach((sample, idx) => {
         const btn = document.createElement('button');
-        btn.className = `w-full text-left p-3 rounded-lg border text-xs transition ${
-          isSelected 
-            ? 'border-indigo-500 bg-indigo-50/60 font-semibold text-indigo-900 shadow-xs' 
-            : 'border-slate-200 hover:bg-slate-50 text-slate-700'
+        const isActive = idx === currentSampleIndex;
+        btn.className = `p-3 rounded-lg border text-left transition ${
+          isActive 
+            ? 'bg-indigo-600/20 border-indigo-500 text-white shadow-md shadow-indigo-500/10' 
+            : 'bg-slate-50/60 border-slate-200 text-slate-700 hover:border-slate-300'
         }`;
         btn.innerHTML = `
           <div class="flex items-center justify-between">
-            <span class="truncate font-mono">${sample.name}</span>
-            <span class="text-[10px] px-1.5 py-0.5 rounded ${sample.isSpoof ? 'bg-rose-100 text-rose-700 font-bold' : 'bg-emerald-100 text-emerald-700 font-bold'}">
-              ${sample.isSpoof ? 'Spoof' : 'Bona-fide'}
-            </span>
+            <span class="font-bold text-xs">${sample.name}</span>
+            <span class="text-[10px] px-1.5 py-0.5 rounded ${sample.groundTruth === 'Synthetic' ? 'bg-rose-500/20 text-rose-300' : 'bg-emerald-500/20 text-emerald-300'}">${sample.tag}</span>
           </div>
-          <div class="text-[11px] text-slate-400 mt-1">${sample.label}</div>
+          <div class="text-[11px] text-slate-600 mt-1 truncate">${sample.transcript}</div>
         `;
-        btn.onclick = () => loadSample(i);
+        btn.onclick = () => {
+          currentSampleIndex = idx;
+          loadSample(idx);
+          renderSampleSelector();
+        };
         container.appendChild(btn);
       });
     }
 
-    function selectModel(modelKey) {
-      const buttons = document.querySelectorAll('.model-btn');
-      buttons.forEach(b => {
-        b.classList.remove('border-indigo-600', 'bg-indigo-50/70', 'text-indigo-700', 'shadow-xs');
-        b.classList.add('border-slate-200', 'text-slate-600');
+    // LOAD SAMPLE INTO VIEW
+    function loadSample(index) {
+      const sample = PRECOMPUTED_SAMPLES[index];
+      
+      // Update basic details
+      document.getElementById('transcriptText').innerText = `"${sample.transcript}"`;
+      document.getElementById('sampleMetaDuration').innerText = `Duration: ${sample.duration}`;
+      document.getElementById('groundTruthBadge').innerText = `Ground Truth: ${sample.groundTruth}`;
+      document.getElementById('featureInsightCard').innerHTML = sample.acousticInsight;
+
+      // Update Verdict Badge according to selected model
+      updateVerdict();
+
+      // Load Audio into Wavesurfer
+      wavesurfer.load(sample.audioUrl);
+      
+      wavesurfer.once('ready', () => {
+        wsRegions.clearRegions();
+        
+        // Populate Regions for phonemes
+        sample.phonemes.forEach((p, pIdx) => {
+          const isHighAttribution = p.ig_score > 0.25;
+          wsRegions.addRegion({
+            id: `region-${pIdx}`,
+            start: p.start,
+            end: p.end,
+            content: p.phoneme,
+            color: isHighAttribution ? 'rgba(244, 63, 94, 0.25)' : 'rgba(99, 102, 241, 0.15)',
+            drag: false,
+            resize: false
+          });
+        });
       });
 
-      const activeBtn = document.getElementById(`btn-${modelKey}`);
-      if (activeBtn) {
-        activeBtn.classList.add('border-indigo-600', 'bg-indigo-50/70', 'text-indigo-700', 'shadow-xs');
-        activeBtn.classList.remove('border-slate-200', 'text-slate-600');
-      }
-
-      const label = document.getElementById('featureLabel');
-      if (modelKey === 'rainbow') label.innerText = "Instantaneous Frequency + Mag Rainbowgram";
-      else if (modelKey === 'ppg') label.innerText = "Phonetic Posteriorgrams (PAFL Weighting)";
-      else if (modelKey === 'lar') label.innerText = "Log Area Ratios (Vocal Tract Coefficients)";
-      else label.innerText = "Hierarchical Decision Tree (SFD + AASIST)";
+      // Render Phoneme IG Bars
+      renderPhonemeAttribution(sample.phonemes);
     }
 
-    // Initialize on page load
-    window.addEventListener('DOMContentLoaded', () => {
+    // UPDATE VERDICT BASED ON ACTIVE MODEL
+    function updateVerdict() {
+      const sample = PRECOMPUTED_SAMPLES[currentSampleIndex];
+      const modelData = sample.models[currentModel];
+      const isSynthetic = modelData.score >= 0.5;
+
+      const badge = document.getElementById('verdictBadge');
+      const conf = document.getElementById('verdictConfidence');
+
+      if (isSynthetic) {
+        badge.className = 'inline-flex items-center gap-2 px-4 py-2 rounded-full text-base font-bold bg-rose-500/10 text-rose-400 border border-rose-500/30';
+        badge.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> SYNTHETIC DETECTED';
+        conf.innerText = `${(modelData.score * 100).toFixed(1)}%`;
+        conf.className = 'mt-3 text-3xl font-extrabold text-rose-400';
+      } else {
+        badge.className = 'inline-flex items-center gap-2 px-4 py-2 rounded-full text-base font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30';
+        badge.innerHTML = '<i class="fa-solid fa-circle-check"></i> BONAFIDE SPEECH';
+        conf.innerText = `${((1 - modelData.score) * 100).toFixed(1)}%`;
+        conf.className = 'mt-3 text-3xl font-extrabold text-emerald-400';
+      }
+    }
+
+    // RENDER PHONEME ATTRIBUTION CHART
+    function renderPhonemeAttribution(phonemes) {
+      const container = document.getElementById('phonemeBarsContainer');
+      container.innerHTML = '';
+
+      phonemes.forEach((item, index) => {
+        const percent = Math.min(Math.abs(item.ig_score) * 150, 100).toFixed(0);
+        const isPositive = item.ig_score >= 0;
+        const barColor = isPositive ? 'bg-rose-500' : 'bg-emerald-500';
+
+        const row = document.createElement('div');
+        row.className = 'group p-3 rounded-lg bg-slate-50/70 border border-slate-200 hover:border-slate-300 transition cursor-pointer';
+        
+        row.innerHTML = `
+          <div class="flex items-center justify-between text-xs mb-1.5">
+            <div class="flex items-center gap-2">
+              <span class="font-mono font-bold text-indigo-300 text-sm bg-indigo-950/60 px-2 py-0.5 rounded border border-indigo-800/50">${item.phoneme}</span>
+              <span class="text-slate-600">${item.category} (${item.start}s – ${item.end}s)</span>
+            </div>
+            <div class="font-mono text-xs font-semibold ${isPositive ? 'text-rose-400' : 'text-emerald-400'}">
+              IG Score: ${item.ig_score > 0 ? '+' : ''}${item.ig_score.toFixed(2)}
+            </div>
+          </div>
+          
+          <!-- Progress Bar -->
+          <div class="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden mb-2">
+            <div class="${barColor} h-full rounded-full transition-all duration-500" style="width: ${percent}%"></div>
+          </div>
+
+          <!-- Note -->
+          <div class="text-[11px] text-slate-600 flex items-center justify-between">
+            <span><i class="fa-solid fa-magnifying-glass-arrow-right text-slate-500 mr-1"></i> ${item.note}</span>
+            <span class="text-indigo-400 group-hover:translate-x-0.5 transition-transform text-[10px] uppercase font-bold flex items-center gap-1">
+              Play Span <i class="fa-solid fa-play text-[9px]"></i>
+            </span>
+          </div>
+        `;
+
+        // Click row to play specific phoneme segment
+        row.onclick = () => {
+          if (wavesurfer) {
+            wavesurfer.setTime(item.start);
+            wavesurfer.play(item.start, item.end);
+          }
+        };
+
+        container.appendChild(row);
+      });
+    }
+
+    // EVENT LISTENERS & SETUP
+    document.addEventListener('DOMContentLoaded', () => {
       initWaveSurfer();
+      renderSampleSelector();
       loadSample(0);
+
+      // Play/Pause Button
+      const playBtn = document.getElementById('playPauseBtn');
+      playBtn.addEventListener('click', () => {
+        if (wavesurfer.isPlaying()) {
+          wavesurfer.pause();
+          playBtn.innerHTML = '<i class="fa-solid fa-play text-sm"></i>';
+        } else {
+          wavesurfer.play();
+          playBtn.innerHTML = '<i class="fa-solid fa-pause text-sm"></i>';
+        }
+      });
+
+      // Model Toggle Buttons
+      const modelButtons = document.querySelectorAll('.model-btn');
+      modelButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          modelButtons.forEach(b => {
+            b.classList.remove('bg-indigo-600', 'text-white', 'border-indigo-500');
+            b.classList.add('bg-slate-200', 'text-slate-700', 'border-slate-300');
+          });
+          btn.classList.add('bg-indigo-600', 'text-white', 'border-indigo-500');
+          btn.classList.remove('bg-slate-200', 'text-slate-700', 'border-slate-300');
+
+          currentModel = btn.getAttribute('data-model');
+          updateVerdict();
+        });
+      });
+
+      // Toggle Spectrogram View
+      const toggleSpecBtn = document.getElementById('toggleFeatureImgBtn');
+      const specContainer = document.getElementById('spectrogramContainer');
+      toggleSpecBtn.addEventListener('click', () => {
+        specContainer.classList.toggle('hidden');
+      });
     });
   </script>
 </body>
