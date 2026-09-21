@@ -32,8 +32,8 @@
           <i class="fa-solid fa-wave-square text-lg"></i>
         </span>
         <div>
-          <h1 class="text-base font-bold tracking-wide leading-tight">Intelligent Sound processing Laboratory (ISP-Lab)</h1>
-          <p class="text-xs text-slate-600">Interpretable Speech Forensics</p>
+          <h1 class="text-base font-bold tracking-wide leading-tight">Interpretable Speech Forensics</h1>
+          <p class="text-xs text-slate-600">Intelligent Sound processing Laboratory (ISP-Lab)</p>
         </div>
       </div>
       
@@ -115,7 +115,7 @@
             <i class="fa-solid fa-play text-sm"></i>
           </button>
           <div>
-            <div class="text-sm font-semibold text-white">Audio Waveform & Segment Alignment</div>
+            <div class="text-sm font-semibold">Audio Waveform & Segment Alignment</div>
             <div class="text-xs text-slate-600">Click on any highlighted phonetic segment to listen to that exact span</div>
           </div>
         </div>
@@ -176,7 +176,7 @@
           </div>
         </div>
 
-        <div class="p-3 bg-indigo-950/30 border border-indigo-800/40 rounded-lg text-xs text-indigo-300 space-y-1">
+        <div class="p-3 bg-indigo-500/30 border border-indigo-800/40 rounded-lg text-xs text-indigo-900 space-y-1">
           <div class="font-semibold flex items-center gap-1.5">
             <i class="fa-solid fa-shield-halved"></i> Why this matters:
           </div>
@@ -193,18 +193,18 @@
       <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 text-xs">
         <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
           <div class="text-slate-500 uppercase font-bold text-[10px]">Backbone 1</div>
-          <div class="text-slate-800 font-semibold mt-1">LARs + CSN</div>
-          <div class="text-slate-600 mt-1">Log Area Ratios for vocal tract boundary modeling.</div>
+          <div class="text-slate-800 font-semibold mt-1">PPGs</div>
+          <div class="text-slate-600 mt-1"><a href="https://link.springer.com/article/10.1007/s11042-026-21628-5" target="_blank" class="text-slate-600 hover:text-indigo-600 hover:underline mt-1 block">Phonetic-enhanced acoustic features: a step forward in synthetic speech detection</a></div>
         </div>
         <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
           <div class="text-slate-500 uppercase font-bold text-[10px]">Backbone 2</div>
-          <div class="text-slate-800 font-semibold mt-1">PPGs (Wav2Vec 2.0)</div>
-          <div class="text-slate-600 mt-1">Phonetic posteriorgrams for pronunciation hardness.</div>
+          <div class="text-slate-800 font-semibold mt-1">LARs + CSN</div>
+          <div class="text-slate-600 mt-1"><a href="https://ieeexplore.ieee.org/abstract/document/11665776/" target="_blank" class="text-slate-600 hover:text-indigo-600 hover:underline mt-1 block">Conditional Speaker Normalization of Vocal Tract Shape Features for Robust Synthetic Speech Detection</a></div>
         </div>
         <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
           <div class="text-slate-500 uppercase font-bold text-[10px]">Backbone 3</div>
-          <div class="text-slate-800 font-semibold mt-1">Rainbowgrams</div>
-          <div class="text-slate-600 mt-1">Joint magnitude and instantaneous frequency tracking.</div>
+          <div class="text-slate-800 font-semibold mt-1">???</div>
+          <div class="text-slate-600 mt-1">???</div>
         </div>
         <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
           <div class="text-slate-500 uppercase font-bold text-[10px]">Final Classifier</div>
@@ -351,7 +351,7 @@
         btn.innerHTML = `
           <div class="flex items-center justify-between">
             <span class="font-bold text-xs">${sample.name}</span>
-            <span class="text-[10px] px-1.5 py-0.5 rounded ${sample.groundTruth === 'Synthetic' ? 'bg-rose-500/20 text-rose-300' : 'bg-emerald-500/20 text-emerald-300'}">${sample.tag}</span>
+            <span class="text-[10px] px-1.5 py-0.5 rounded ${sample.groundTruth === 'Synthetic' ? 'bg-rose-500/20 text-rose-800' : 'bg-emerald-500/20 text-emerald-500'}">${sample.tag}</span>
           </div>
           <div class="text-[11px] text-slate-600 mt-1 truncate">${sample.transcript}</div>
         `;
@@ -440,7 +440,7 @@
         row.innerHTML = `
           <div class="flex items-center justify-between text-xs mb-1.5">
             <div class="flex items-center gap-2">
-              <span class="font-mono font-bold text-indigo-300 text-sm bg-indigo-950/60 px-2 py-0.5 rounded border border-indigo-800/50">${item.phoneme}</span>
+              <span class="font-mono font-bold text-indigo-300 text-sm bg-indigo-50/60 px-2 py-0.5 rounded border border-indigo-800/50">${item.phoneme}</span>
               <span class="text-slate-600">${item.category} (${item.start}s – ${item.end}s)</span>
             </div>
             <div class="font-mono text-xs font-semibold ${isPositive ? 'text-rose-400' : 'text-emerald-400'}">
