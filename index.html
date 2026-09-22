@@ -129,13 +129,13 @@
       <div id="spectrogramContainer" class="bg-slate-50 p-3 rounded-lg border border-slate-200/80 space-y-2">
         <div class="flex justify-between items-center text-xs text-slate-600">
           <span>Input representation</span>
-          <span class="text-indigo-400 font-mono">Time-synchronized representation</span>
         </div>
         <div class="w-full h-28 bg-gradient-to-r from-violet-900/40 via-fuchsia-900/40 to-cyan-900/40 rounded border border-slate-200 overflow-hidden">
 		  <img 
-			src="src/sample1/LAR_LA_D_1047731.png" 
-			alt="LAR Sample" 
-			class="w-full h-full object-fill" 
+        id="input_representation"
+        src="src/sample1/LAR_LA_D_1047731.png" 
+        alt="LAR Sample" 
+        class="w-full h-full object-fill" 
 		  />
 		</div>
       </div>
@@ -165,7 +165,7 @@
       <div class="bg-slate-100/90 border border-slate-200 rounded-xl p-6 shadow-xl flex flex-col justify-between space-y-4">
         <div>
           <h3 class="text-sm font-semibold uppercase tracking-wider text-indigo-400 flex items-center gap-2 mb-3">
-            <i class="fa-solid fa-microscope"></i> Acoustic Interpretation
+            <i class="fa-solid fa-microscope"></i> Attack Description
           </h3>
           <div id="featureInsightCard" class="bg-slate-50/70 p-4 rounded-lg border border-slate-200 space-y-3 text-xs leading-relaxed text-slate-700">
             <!-- Dynamic explanation text -->
@@ -208,18 +208,16 @@
     const PRECOMPUTED_SAMPLES = [
       {
         id: "sample_01",
-        name: "ElevenLabs TTS",
-        tag: "Neural TTS Attack",
+        name: "A17 Attack",
+        tag: "Voice Conversion",
         groundTruth: "Synthetic",
-        transcript: "The speech signal exhibits unnatural high-frequency phase coherence.",
+        transcript: "They failed to reach agreement yesterday.",
         // A royalty-free short speech sample hosted on CDN for instant testing
-        audioUrl: "src/sample1/LA_D_1047731.mp3",
-        duration: "5s",
+        audioUrl: "src/sample1/LA_E_1729506.flac",
+        duration: "3s",
         models: {
-          fusion: { prediction: "Synthetic", score: 0.984 },
-          rainbowgram: { prediction: "Synthetic", score: 0.952 },
-          ppg: { prediction: "Synthetic", score: 0.891 },
-          lar: { prediction: "Synthetic", score: 0.810 }
+          ppg: { prediction: "Synthetic", score: 0.80, url: "src/sample1/PPG_LA_E_1729506.png" },
+          lar: { prediction: "Synthetic", score: 0.99, url: "src/sample1/LAR_LA_E_1729506.png" }
         },
         phonemes: [
           { phoneme: "/s/", start: 0.25, end: 0.45, ig_score: 0.48, category: "Fricative", note: "Anomalous high-frequency phase coherence detected in Rainbowgram IF channel." },
@@ -227,118 +225,108 @@
           { phoneme: "/iː/", start: 1.10, end: 1.35, ig_score: 0.14, category: "Vowel", note: "Slight unnatural static formant stability across frame boundaries." },
           { phoneme: "/n/", start: 1.65, end: 1.82, ig_score: 0.05, category: "Nasal", note: "Typical nasal resonance, low contribution." }
         ],
-        acousticInsight: "The <strong>Fusion Tree</strong> prioritizes Rainbowgram IF channel evidence along with LAR deviations. Notice how the unvoiced fricative <code>/s/</code> accounts for nearly 50% of the synthetic attribution score due to spectral over-smoothing."
+        attackDesc: "This human speech voice conversion method uses WORLD features and a VAE for conversion to extract MCC and F0 parameters. The output waveform is then reconstructed via waveform filtering."
       },
       {
         id: "sample_02",
-        name: "Bonafide Natural",
-        tag: "Human Speaker",
-        groundTruth: "Bonafide",
-        transcript: "Natural voice captured with realistic room acoustics and vocal micro-tremors.",
-        audioUrl: "https://actions.google.com/sounds/v1/ambiences/coffee_shop.ogg",
-        duration: "3.2s",
+        name: "A19 Attack",
+        tag: "Voice Conversion",
+        groundTruth: "Synthetic",
+        transcript: "The structural will be kept to a minimum.",
+        audioUrl: "src/sample2/LA_E_3008390.flac",
+        duration: "2s",
         models: {
-          fusion: { prediction: "Bonafide", score: 0.035 },
-          rainbowgram: { prediction: "Bonafide", score: 0.042 },
-          ppg: { prediction: "Bonafide", score: 0.028 },
-          lar: { prediction: "Bonafide", score: 0.051 }
+          ppg: { prediction: "Synthetic", score: 0.88, url: "src/sample2/PPG_LA_E_3008390.png" },
+          lar: { prediction: "Synthetic", score: 0.81, url: "src/sample2/LAR_LA_E_3008390.png" }
         },
         phonemes: [
           { phoneme: "/æ/", start: 0.30, end: 0.55, ig_score: -0.35, category: "Vowel", note: "Natural vocal fold jitter and shimmer patterns observed in LAR proxy." },
           { phoneme: "/k/", start: 0.75, end: 0.88, ig_score: -0.25, category: "Plosive", note: "Realistic turbulent aspiration burst matching organic vocal tract area." },
           { phoneme: "/m/", start: 1.20, end: 1.45, ig_score: -0.15, category: "Nasal", note: "Organic low-frequency pole-zero distribution." }
         ],
-        acousticInsight: "All feature extractors agree strongly with <strong>Bonafide</strong> status. Vocal micro-tremors and natural glottal pulse variations across the open vowels prevent false positive triggers."
+        attackDesc: "This attack applies GMM-UBM processing on LPCC/MFCC features to perform human speech voice conversion. The resulting speech is synthesized using spectral filtering and the Overlap-Add technique."
       },
       {
         id: "sample_03",
-        name: "Voice Conversion",
-        tag: "Diffusion VC",
+        name: "A12 Attack",
+        tag: "Text-To-Speech",
         groundTruth: "Synthetic",
-        transcript: "Target timbre was altered while retaining source speaker prosody.",
-        audioUrl: "https://actions.google.com/sounds/v1/speech/sample_sentence.ogg",
-        duration: "2.5s",
+        transcript: "It has been a frustrating one.",
+        audioUrl: "src/sample3/LA_E_6477269.flac",
+        duration: "2s",
         models: {
-          fusion: { prediction: "Synthetic", score: 0.912 },
-          rainbowgram: { prediction: "Synthetic", score: 0.785 },
-          ppg: { prediction: "Synthetic", score: 0.941 },
-          lar: { prediction: "Synthetic", score: 0.880 }
+          ppg: { prediction: "Synthetic", score: 0.95, url: "src/sample3/PPG_LA_E_6477269.png" },
+          lar: { prediction: "Synthetic", score: 0.64, url: "src/sample3/LAR_LA_E_6477269.png" }
         },
         phonemes: [
           { phoneme: "/v/", start: 0.15, end: 0.38, ig_score: 0.42, category: "Fricative", note: "PPG alignment reveals temporal mismatch between source phone duration and formant transitions." },
           { phoneme: "/ɔɪ/", start: 0.60, end: 0.92, ig_score: 0.36, category: "Diphthong", note: "Vocal tract cross-section (LARs) exhibits discontinuous interpolation." },
           { phoneme: "/s/", start: 1.10, end: 1.30, ig_score: 0.18, category: "Fricative", note: "Phase inconsistencies in vocoder reconstruction." }
         ],
-        acousticInsight: "In Voice Conversion attacks, <strong>PPG representation</strong> provides the strongest discriminative power because frame-level phonetic alignments deviate from physical articulation constraints during diphthong transitions."
+        attackDesc: "This system processes text through NLP and an RNN to generate both F0 and linguistic features directly. These features are then synthesized into a speech waveform using the WaveNet model."
       },
       {
-        id: "sample_03",
-        name: "Voice Conversion",
-        tag: "Diffusion VC",
+        id: "sample_04",
+        name: "A09 Attack",
+        tag: "Text-To-Speech",
         groundTruth: "Synthetic",
-        transcript: "Target timbre was altered while retaining source speaker prosody.",
-        audioUrl: "https://actions.google.com/sounds/v1/speech/sample_sentence.ogg",
-        duration: "2.5s",
+        transcript: "I am very proud of my players.",
+        audioUrl: "src/sample4/LA_E_7294518.flac",
+        duration: "2s",
         models: {
-          fusion: { prediction: "Synthetic", score: 0.912 },
-          rainbowgram: { prediction: "Synthetic", score: 0.785 },
-          ppg: { prediction: "Synthetic", score: 0.941 },
-          lar: { prediction: "Synthetic", score: 0.880 }
+          ppg: { prediction: "Synthetic", score: 0.92, url: "src/sample4/PPG_LA_E_7294518.png" },
+          lar: { prediction: "Synthetic", score: 0.81, url: "src/sample4/LAR_LA_E_7294518.png" }
         },
         phonemes: [
           { phoneme: "/v/", start: 0.15, end: 0.38, ig_score: 0.42, category: "Fricative", note: "PPG alignment reveals temporal mismatch between source phone duration and formant transitions." },
           { phoneme: "/ɔɪ/", start: 0.60, end: 0.92, ig_score: 0.36, category: "Diphthong", note: "Vocal tract cross-section (LARs) exhibits discontinuous interpolation." },
           { phoneme: "/s/", start: 1.10, end: 1.30, ig_score: 0.18, category: "Fricative", note: "Phase inconsistencies in vocoder reconstruction." }
         ],
-        acousticInsight: "In Voice Conversion attacks, <strong>PPG representation</strong> provides the strongest discriminative power because frame-level phonetic alignments deviate from physical articulation constraints during diphthong transitions."
+        attackDesc: "This system converts text input into MCC and F0 features using an NLP processor and an RNN architecture. The Vocaine vocoder is then used to synthesize the final synthetic speech signal."
       },
       {
-        id: "sample_03",
-        name: "Voice Conversion",
-        tag: "Diffusion VC",
-        groundTruth: "Synthetic",
-        transcript: "Target timbre was altered while retaining source speaker prosody.",
-        audioUrl: "https://actions.google.com/sounds/v1/speech/sample_sentence.ogg",
-        duration: "2.5s",
+        id: "sample_05",
+        name: "Bonafide Speech",
+        tag: "Natural human speech",
+        groundTruth: "Bonafide",
+        transcript: "It's been hard.",
+        audioUrl: "src/sample5/LA_E_8527263.flac",
+        duration: "1s",
         models: {
-          fusion: { prediction: "Synthetic", score: 0.912 },
-          rainbowgram: { prediction: "Synthetic", score: 0.785 },
-          ppg: { prediction: "Synthetic", score: 0.941 },
-          lar: { prediction: "Synthetic", score: 0.880 }
+          ppg: { prediction: "Bonafide", score: 0.04, url: "src/sample5/PPG_LA_E_8527263.png" },
+          lar: { prediction: "Bonafide", score: 0.01, url: "src/sample5/LAR_LA_E_8527263.png" }
         },
         phonemes: [
           { phoneme: "/v/", start: 0.15, end: 0.38, ig_score: 0.42, category: "Fricative", note: "PPG alignment reveals temporal mismatch between source phone duration and formant transitions." },
           { phoneme: "/ɔɪ/", start: 0.60, end: 0.92, ig_score: 0.36, category: "Diphthong", note: "Vocal tract cross-section (LARs) exhibits discontinuous interpolation." },
           { phoneme: "/s/", start: 1.10, end: 1.30, ig_score: 0.18, category: "Fricative", note: "Phase inconsistencies in vocoder reconstruction." }
         ],
-        acousticInsight: "In Voice Conversion attacks, <strong>PPG representation</strong> provides the strongest discriminative power because frame-level phonetic alignments deviate from physical articulation constraints during diphthong transitions."
+        attackDesc: "Natural human speech."
       },
       {
-        id: "sample_03",
-        name: "Voice Conversion",
-        tag: "Diffusion VC",
+        id: "sample_06",
+        name: "A08 Attack",
+        tag: "Voice Conversion",
         groundTruth: "Synthetic",
-        transcript: "Target timbre was altered while retaining source speaker prosody.",
-        audioUrl: "https://actions.google.com/sounds/v1/speech/sample_sentence.ogg",
-        duration: "2.5s",
+        transcript: "He often said that example wasn't one of the auctions of leadership, it was the only auction.",
+        audioUrl: "src/sample6/LA_E_8961675.flac",
+        duration: "4s",
         models: {
-          fusion: { prediction: "Synthetic", score: 0.912 },
-          rainbowgram: { prediction: "Synthetic", score: 0.785 },
-          ppg: { prediction: "Synthetic", score: 0.941 },
-          lar: { prediction: "Synthetic", score: 0.880 }
+          ppg: { prediction: "Synthetic", score: 0.92, url: "src/sample6/PPG_LA_E_8961675.png" },
+          lar: { prediction: "Synthetic", score: 0.97, url: "src/sample6/LAR_LA_E_8961675.png" }
         },
         phonemes: [
           { phoneme: "/v/", start: 0.15, end: 0.38, ig_score: 0.42, category: "Fricative", note: "PPG alignment reveals temporal mismatch between source phone duration and formant transitions." },
           { phoneme: "/ɔɪ/", start: 0.60, end: 0.92, ig_score: 0.36, category: "Diphthong", note: "Vocal tract cross-section (LARs) exhibits discontinuous interpolation." },
           { phoneme: "/s/", start: 1.10, end: 1.30, ig_score: 0.18, category: "Fricative", note: "Phase inconsistencies in vocoder reconstruction." }
         ],
-        acousticInsight: "In Voice Conversion attacks, <strong>PPG representation</strong> provides the strongest discriminative power because frame-level phonetic alignments deviate from physical articulation constraints during diphthong transitions."
+        attackDesc: "This TTS attack processes text via NLP and an Autoregressive RNN to derive MCC and F0 features for synthesis. It relies on a Neural Source-Filter model to generate the final acoustic waveform."
       }
     ];
 
     // APPLICATION STATE
     let currentSampleIndex = 0;
-    let currentModel = 'fusion';
+    let currentModel = 'ppg';
     let wavesurfer = null;
     let wsRegions = null;
 
@@ -421,7 +409,10 @@
       document.getElementById('transcriptText').innerText = `"${sample.transcript}"`;
       document.getElementById('sampleMetaDuration').innerText = `Duration: ${sample.duration}`;
       document.getElementById('groundTruthBadge').innerText = `Ground Truth: ${sample.groundTruth}`;
-      document.getElementById('featureInsightCard').innerHTML = sample.acousticInsight;
+      document.getElementById('featureInsightCard').innerHTML = sample.attackDesc;
+
+      // load input representation image
+      document.getElementById('input_representation').src = sample.models[currentModel].url
 
       // Update Verdict Badge according to selected model
       updateVerdict();
@@ -459,16 +450,17 @@
 
       const badge = document.getElementById('verdictBadge');
       const conf = document.getElementById('verdictConfidence');
+      document.getElementById('input_representation').src = sample.models[currentModel].url
 
       if (isSynthetic) {
         badge.className = 'inline-flex items-center gap-2 px-4 py-2 rounded-full text-base font-bold bg-rose-500/10 text-rose-400 border border-rose-500/30';
         badge.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> SYNTHETIC DETECTED';
-        conf.innerText = `${(modelData.score * 100).toFixed(1)}%`;
+        conf.innerText = `${(modelData.score * 100).toFixed(0)}%`;
         conf.className = 'mt-3 text-3xl font-extrabold text-rose-400';
       } else {
         badge.className = 'inline-flex items-center gap-2 px-4 py-2 rounded-full text-base font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30';
         badge.innerHTML = '<i class="fa-solid fa-circle-check"></i> BONAFIDE SPEECH';
-        conf.innerText = `${((1 - modelData.score) * 100).toFixed(1)}%`;
+        conf.innerText = `${((1 - modelData.score) * 100).toFixed(0)}%`;
         conf.className = 'mt-3 text-3xl font-extrabold text-emerald-400';
       }
     }
