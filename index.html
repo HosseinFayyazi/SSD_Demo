@@ -600,15 +600,16 @@
 
       
 
-      // Load Audio into Wavesurfer
-      wavesurfer.load(sample.audioUrl);
+      
       // Update Verdict Badge according to selected model
       updateVerdict();
       
     }
     
     function update_wavesurfer(sample){
-      // wavesurfer.once('ready', () => {
+      // Load Audio into Wavesurfer
+      wavesurfer.load(sample.audioUrl);
+      wavesurfer.once('ready', () => {
         wsRegions.clearRegions();
         
         // Populate Regions for phonemes
@@ -624,7 +625,7 @@
             resize: false
           });
         });
-      // });
+      });
 
       // Render Phoneme IG Bars
       renderPhonemeAttribution(sample.models[currentModel].phonemes);
