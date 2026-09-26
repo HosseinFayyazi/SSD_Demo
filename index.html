@@ -357,10 +357,10 @@
           lar: { prediction: "Synthetic", score: 0.99, url: "src/sample1/LAR_LA_E_1729506.png" }
         },
         phonemes: [
-          { phoneme: "/s/", start: 0.25, end: 0.45, ig_score: 0.48, category: "Fricative", note: "Anomalous high-frequency phase coherence detected in Rainbowgram IF channel." },
-          { phoneme: "/tʃ/", start: 0.55, end: 0.72, ig_score: 0.31, category: "Affricate", note: "Overly sharp energy transition contrary to biological vocal tract damping." },
-          { phoneme: "/iː/", start: 1.10, end: 1.35, ig_score: 0.14, category: "Vowel", note: "Slight unnatural static formant stability across frame boundaries." },
-          { phoneme: "/n/", start: 1.65, end: 1.82, ig_score: 0.05, category: "Nasal", note: "Typical nasal resonance, low contribution." }
+          { phoneme: "/iː/", start: 1.87, end: 1.96, ig_score: 1.00, category: "Vowel", note: "Unnatural static formant stability across frame boundaries." },
+          { phoneme: "/ə/", start: 1.34, end: 1.41, ig_score: 0.94, category: "Vowel", note: "Unnatural static formant stability across frame boundaries." },
+          { phoneme: "/m/", start: 1.96, end: 2.04, ig_score: 0.84, category: "Nasal", note: "Severe anti-formant spectral flattening inconsistent with nasal cavity resonances." },
+          { phoneme: "/ej/", start: 0.92, end: 1.06, ig_score: 0.82, category: "Vowel", note: "Unnatural static formant stability across frame boundaries." }
         ],
         attackDesc: "This human speech voice conversion method uses WORLD features and a VAE for conversion to extract MCC and F0 parameters. The output waveform is then reconstructed via waveform filtering."
       },
@@ -377,9 +377,10 @@
           lar: { prediction: "Synthetic", score: 0.81, url: "src/sample2/LAR_LA_E_3008390.png" }
         },
         phonemes: [
-          { phoneme: "/æ/", start: 0.30, end: 0.55, ig_score: -0.35, category: "Vowel", note: "Natural vocal fold jitter and shimmer patterns observed in LAR proxy." },
-          { phoneme: "/k/", start: 0.75, end: 0.88, ig_score: -0.25, category: "Plosive", note: "Realistic turbulent aspiration burst matching organic vocal tract area." },
-          { phoneme: "/m/", start: 1.20, end: 1.45, ig_score: -0.15, category: "Nasal", note: "Organic low-frequency pole-zero distribution." }
+          { phoneme: "/m/", start: 2.02, end: 2.07, ig_score: 1.00, category: "Nasal", note: "Severe anti-formant spectral flattening inconsistent with nasal cavity resonances." },
+          { phoneme: "/ɫ̩/", start: 1.32, end: 1.35, ig_score: 0.97, category: "Vowel", note: "Unnatural static formant stability across frame boundaries." },
+          { phoneme: "/ɐ/", start: 1.04, end: 1.10, ig_score: 0.94, category: "Vowel", note: "Unnatural static formant stability across frame boundaries." },
+          { phoneme: "/t/", start: 0.95, end: 1.00, ig_score: 0.89, category: "Plosive", note: "Atypical release burst energy inconsistent with human vocal tract dynamics." }
         ],
         attackDesc: "This attack applies GMM-UBM processing on LPCC/MFCC features to perform human speech voice conversion. The resulting speech is synthesized using spectral filtering and the Overlap-Add technique."
       },
@@ -396,9 +397,10 @@
           lar: { prediction: "Synthetic", score: 0.64, url: "src/sample3/LAR_LA_E_6477269.png" }
         },
         phonemes: [
-          { phoneme: "/v/", start: 0.15, end: 0.38, ig_score: 0.42, category: "Fricative", note: "PPG alignment reveals temporal mismatch between source phone duration and formant transitions." },
-          { phoneme: "/ɔɪ/", start: 0.60, end: 0.92, ig_score: 0.36, category: "Diphthong", note: "Vocal tract cross-section (LARs) exhibits discontinuous interpolation." },
-          { phoneme: "/s/", start: 1.10, end: 1.30, ig_score: 0.18, category: "Fricative", note: "Phase inconsistencies in vocoder reconstruction." }
+          { phoneme: "/ŋ/", start: 1.34, end: 1.39, ig_score: 1.00, category: "Nasal", note: "Severe anti-formant spectral flattening inconsistent with nasal cavity resonances." },
+          { phoneme: "/b/", start: 0.42, end: 0.48, ig_score: 0.96, category: "Plosive", note: "Atypical release burst energy inconsistent with human vocal tract dynamics." },
+          { phoneme: "/t/", start: 0.14, end: 0.18, ig_score: 0.95, category: "Plosive", note: "Atypical release burst energy inconsistent with human vocal tract dynamics." },
+          { phoneme: "/ɹ/", start: 1.07, end: 1.11, ig_score: 0.95, category: "Approximant", note: "Strong synthetic footprint identified across acoustic filter-bank representations." }
         ],
         attackDesc: "This system processes text through NLP and an RNN to generate both F0 and linguistic features directly. These features are then synthesized into a speech waveform using the WaveNet model."
       },
@@ -415,9 +417,10 @@
           lar: { prediction: "Synthetic", score: 0.81, url: "src/sample4/LAR_LA_E_7294518.png" }
         },
         phonemes: [
-          { phoneme: "/v/", start: 0.15, end: 0.38, ig_score: 0.42, category: "Fricative", note: "PPG alignment reveals temporal mismatch between source phone duration and formant transitions." },
-          { phoneme: "/ɔɪ/", start: 0.60, end: 0.92, ig_score: 0.36, category: "Diphthong", note: "Vocal tract cross-section (LARs) exhibits discontinuous interpolation." },
-          { phoneme: "/s/", start: 1.10, end: 1.30, ig_score: 0.18, category: "Fricative", note: "Phase inconsistencies in vocoder reconstruction." }
+          { phoneme: "/m/", start: 1.17, end: 1.22, ig_score: 1.00, category: "Nasal", note: "Severe anti-formant spectral flattening inconsistent with nasal cavity resonances." },
+          { phoneme: "/ə/", start: 0.28, end: 0.33, ig_score: 0.91, category: "Vowel", note: "Unnatural static formant stability across frame boundaries." },
+          { phoneme: "/ɛ/", start: 0.46, end: 0.54, ig_score: 0.84, category: "Vowel", note: "Unnatural static formant stability across frame boundaries." },
+          { phoneme: "/v/", start: 1.11, end: 1.17, ig_score: 0.82, category: "Fricative", note: "Anomalous high-frequency phase coherence detected in Rainbowgram IF channel." }
         ],
         attackDesc: "This system converts text input into MCC and F0 features using an NLP processor and an RNN architecture. The Vocaine vocoder is then used to synthesize the final synthetic speech signal."
       },
@@ -434,9 +437,10 @@
           lar: { prediction: "Bonafide", score: 0.01, url: "src/sample5/LAR_LA_E_8527263.png" }
         },
         phonemes: [
-          { phoneme: "/v/", start: 0.15, end: 0.38, ig_score: 0.42, category: "Fricative", note: "PPG alignment reveals temporal mismatch between source phone duration and formant transitions." },
-          { phoneme: "/ɔɪ/", start: 0.60, end: 0.92, ig_score: 0.36, category: "Diphthong", note: "Vocal tract cross-section (LARs) exhibits discontinuous interpolation." },
-          { phoneme: "/s/", start: 1.10, end: 1.30, ig_score: 0.18, category: "Fricative", note: "Phase inconsistencies in vocoder reconstruction." }
+          { phoneme: "/d/", start: 1.45, end: 1.56, ig_score: 1.00, category: "Plosive", note: "Atypical release burst energy inconsistent with human vocal tract dynamics." },
+          { phoneme: "/h/", start: 1.15, end: 1.25, ig_score: 0.95, category: "Fricative", note: "Anomalous high-frequency phase coherence detected in Rainbowgram IF channel." },
+          { phoneme: "/ɪ/", start: 0.82, end: 0.93, ig_score: 0.81, category: "Vowel", note: "Unnatural static formant stability across frame boundaries." },
+          { phoneme: "/ɑ/", start: 1.25, end: 1.32, ig_score: 0.57, category: "Vowel", note: "Unnatural static formant stability across frame boundaries." }
         ],
         attackDesc: "Natural human speech."
       },
@@ -453,9 +457,10 @@
           lar: { prediction: "Synthetic", score: 0.97, url: "src/sample6/LAR_LA_E_8961675.png" }
         },
         phonemes: [
-          { phoneme: "/v/", start: 0.15, end: 0.38, ig_score: 0.42, category: "Fricative", note: "PPG alignment reveals temporal mismatch between source phone duration and formant transitions." },
-          { phoneme: "/ɔɪ/", start: 0.60, end: 0.92, ig_score: 0.36, category: "Diphthong", note: "Vocal tract cross-section (LARs) exhibits discontinuous interpolation." },
-          { phoneme: "/s/", start: 1.10, end: 1.30, ig_score: 0.18, category: "Fricative", note: "Phase inconsistencies in vocoder reconstruction." }
+          { phoneme: "/ə/", start: 2.53, end: 2.57, ig_score: 1.00, category: "Vowel", note: "Unnatural static formant stability across frame boundaries." },
+          { phoneme: "/ə/", start: 0.45, end: 0.49, ig_score: 0.98, category: "Vowel", note: "Unnatural static formant stability across frame boundaries." },
+          { phoneme: "/n/", start: 0.49, end: 0.55, ig_score: 0.81, category: "Nasal", note: "Severe anti-formant spectral flattening inconsistent with nasal cavity resonances." },
+          { phoneme: "/z/", start: 2.62, end: 2.67, ig_score: 0.74, category: "Fricative", note: "Anomalous high-frequency phase coherence detected in Rainbowgram IF channel." }
         ],
         attackDesc: "This TTS attack processes text via NLP and an Autoregressive RNN to derive MCC and F0 features for synthesis. It relies on a Neural Source-Filter model to generate the final acoustic waveform."
       }
