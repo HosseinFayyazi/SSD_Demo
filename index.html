@@ -608,7 +608,7 @@
     }
     
     function update_wavesurfer(sample){
-      wavesurfer.once('ready', () => {
+      // wavesurfer.once('ready', () => {
         wsRegions.clearRegions();
         
         // Populate Regions for phonemes
@@ -624,7 +624,7 @@
             resize: false
           });
         });
-      });
+      // });
 
       // Render Phoneme IG Bars
       renderPhonemeAttribution(sample.models[currentModel].phonemes);
