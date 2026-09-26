@@ -598,12 +598,16 @@
       // load input representation image
       document.getElementById('input_representation').src = sample.models[currentModel].url
 
-      // Update Verdict Badge according to selected model
-      updateVerdict();
+      
 
       // Load Audio into Wavesurfer
       wavesurfer.load(sample.audioUrl);
+      // Update Verdict Badge according to selected model
+      updateVerdict();
       
+    }
+    
+    function update_wavesurfer(sample){
       wavesurfer.once('ready', () => {
         wsRegions.clearRegions();
         
@@ -635,6 +639,7 @@
       const badge = document.getElementById('verdictBadge');
       const conf = document.getElementById('verdictConfidence');
       document.getElementById('input_representation').src = sample.models[currentModel].url
+      update_wavesurfer(sample)
 
       if (isSynthetic) {
         badge.className = 'inline-flex items-center gap-2 px-4 py-2 rounded-full text-base font-bold bg-rose-500/10 text-rose-400 border border-rose-500/30';
